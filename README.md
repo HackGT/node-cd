@@ -1,6 +1,6 @@
 node-cd
 =======
-*This is the solution we are going to use to avoid using FTP for everything
+#This is the solution we are going to use to avoid using FTP for everything
 
 **Featherweight Github/Bitbucket/Contentful Continuous Deployment**
 
