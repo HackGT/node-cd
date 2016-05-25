@@ -33,29 +33,34 @@ GitHub.prototype.post = function (req, res) {
 
   if (payload.ref === config.repository.branch ||
     payload.ref === 'refs/heads/master' ||
-    payload.ref === 'refs/heads/develop') {
-    myExec(config.action.exec.github)
-  }
-
-  res.writeHead(200)
-  res.end()
-}
-
-var inAuthorizedSubnet = function (ip) {
-  var authorizedSubnet = config.security.githubAuthorizedSubnets.map(function (subnet) {
-    return new Netmask(subnet)
-  })
-  return authorizedSubnet.some(function (subnet) {
-    return subnet.contains(ip)
-  })
-}
-
-var myExec = function (line) {
-  var exec = require('child_process').exec
-  var execCallback = function (error) {
-    if (error !== null) {
-      console.log('exec error: ' + error)
+    payload.ref === 'refs/heads/release') {
+      var repo = payload.repository.name;
+      if (repo == 'sponsorship-package') {
+        myExec(config.action.exec.sponsors);
+      } else if (repo == 'teaser2016') {
+        myExec(config.action.exec.teaser);
+      }
     }
+
+    res.writeHead(200)
+    res.end()
   }
-  exec(line, execCallback)
-}
+
+  var inAuthorizedSubnet = function (ip) {
+    var authorizedSubnet = config.security.githubAuthorizedSubnets.map(function (subnet) {
+      return new Netmask(subnet)
+    })
+    return authorizedSubnet.some(function (subnet) {
+      return subnet.contains(ip)
+    })
+  }
+
+  var myExec = function (line) {
+    var exec = require('child_process').exec
+    var execCallback = function (error) {
+      if (error !== null) {
+        console.log('exec error: ' + error)
+      }
+    }
+    exec(line, execCallback)
+  }
